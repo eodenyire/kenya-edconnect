@@ -46,9 +46,9 @@ export default function DigiBlog() {
   const createPost = async () => {
     if (!newTitle.trim() || !newContent.trim()) return;
     setCreating(true);
-    const { error } = await supabase.from("blog_posts").insert({
-      title: newTitle, content: newContent, category: newCategory, author_id: user?.id,
-    });
+    const { error } = await supabase.from("blog_posts").insert([{
+      title: newTitle, content: newContent, category: newCategory as any, author_id: user?.id!,
+    }]);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
