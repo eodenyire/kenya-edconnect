@@ -14,6 +14,8 @@ import DigiGuide from "./pages/DigiGuide";
 import DigiLab from "./pages/DigiLab";
 import DigiChat from "./pages/DigiChat";
 import DigiBlog from "./pages/DigiBlog";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
 
@@ -40,6 +42,8 @@ const App = () => (
               <Route path="/digilab" element={<DigiLab />} />
               <Route path="/digichat" element={<DigiChat />} />
               <Route path="/digiblog" element={<DigiBlog />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
           </Route>
 
