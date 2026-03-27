@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,8 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <Button size="sm">Get Started</Button>
+          <Button size="sm" variant="outline" asChild className="mr-2"><Link to="/login">Sign In</Link></Button>
+          <Button size="sm" asChild><Link to="/register">Get Started</Link></Button>
         </div>
 
         <button
@@ -66,7 +68,8 @@ const Navbar = () => {
                   {l.label}
                 </a>
               ))}
-              <Button size="sm" className="w-full mt-2">Get Started</Button>
+              <Button size="sm" variant="outline" asChild className="w-full"><Link to="/login">Sign In</Link></Button>
+              <Button size="sm" asChild className="w-full mt-2"><Link to="/register">Get Started</Link></Button>
             </div>
           </motion.div>
         )}
