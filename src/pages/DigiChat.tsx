@@ -33,9 +33,9 @@ export default function DigiChat() {
   const createSquad = async () => {
     if (!newSquadName.trim()) return;
     setCreating(true);
-    const { data, error } = await supabase.from("squads").insert({
-      name: newSquadName, description: newSquadDesc, created_by: user?.id, member_count: 1,
-    }).select().single();
+    const { data, error } = await supabase.from("squads").insert([{
+      name: newSquadName, description: newSquadDesc, created_by: user?.id!, member_count: 1,
+    }]).select().single();
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
