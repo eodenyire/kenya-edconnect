@@ -10,24 +10,36 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Search, MessageSquare, Users, Plus, Loader2 } from "lucide-react";
+import SquadChatRoom from "@/components/SquadChatRoom";
 
 export default function DigiChat() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [squads, setSquads] = useState<any[]>([]);
+  const [mySquadIds, setMySquadIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [newSquadName, setNewSquadName] = useState("");
   const [newSquadDesc, setNewSquadDesc] = useState("");
   const [creating, setCreating] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeSquad, setActiveSquad] = useState<any | null>(null);
 
-  useEffect(() => { fetchSquads(); }, []);
+  useEffect(() => {
+    fetchSquads();
+    fetchMyMemberships();
+  }, [user]);
 
   const fetchSquads = async () => {
     const { data } = await supabase.from("squads").select("*").order("created_at", { ascending: false });
     setSquads(data || []);
     setLoading(false);
+  };
+
+  const fetchMyMemberships = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("squad_memberships").select("squad_id").eq("user_id", user.id);
+    setMySquadIds(new Set((data || []).map((m) => m.squad_id)));
   };
 
   const createSquad = async () => {
@@ -44,31 +56,48 @@ export default function DigiChat() {
       toast({ title: "Squad created!", description: `${newSquadName} is ready.` });
       setNewSquadName(""); setNewSquadDesc(""); setDialogOpen(false);
       fetchSquads();
+      fetchMyMemberships();
+      setActiveSquad(data);
     }
     setCreating(false);
   };
 
-  const joinSquad = async (squadId: string) => {
-    const { error } = await supabase.from("squad_memberships").insert({ squad_id: squadId, user_id: user?.id });
+  const joinSquad = async (squad: any) => {
+    const { error } = await supabase.from("squad_memberships").insert({ squad_id: squad.id, user_id: user?.id });
     if (error?.code === "23505") {
-      toast({ title: "Already a member", description: "You've already joined this squad." });
+      // Already a member, just open the chat
+      setActiveSquad(squad);
     } else if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Joined!", description: "You're now part of this squad." });
+      fetchMyMemberships();
+      setActiveSquad(squad);
+    }
+  };
+
+  const openChat = (squad: any) => {
+    if (mySquadIds.has(squad.id)) {
+      setActiveSquad(squad);
+    } else {
+      joinSquad(squad);
     }
   };
 
   const filtered = squads.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()));
+
+  if (activeSquad) {
+    return <SquadChatRoom squad={activeSquad} onBack={() => { setActiveSquad(null); fetchSquads(); }} />;
+  }
 
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold flex items-center gap-3">
-            <MessageSquare className="h-8 w-8 text-blue-500" /> DigiChat
+            <MessageSquare className="h-8 w-8 text-primary" /> DigiChat
           </h1>
-          <p className="text-muted-foreground mt-1">Join study squads and connect with mentors</p>
+          <p className="text-muted-foreground mt-1">Join study squads and chat with peers in real-time</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
@@ -100,7 +129,7 @@ export default function DigiChat() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-blue-500" /></div>
+        <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
       ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
@@ -111,22 +140,30 @@ export default function DigiChat() {
         </Card>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((squad) => (
-            <Card key={squad.id} className="card-hover">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">{squad.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {squad.description && <p className="text-sm text-muted-foreground line-clamp-2">{squad.description}</p>}
-                <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="text-xs">
-                    <Users className="h-3 w-3 mr-1" /> {squad.member_count} members
-                  </Badge>
-                  <Button size="sm" variant="outline" onClick={() => joinSquad(squad.id)}>Join</Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {filtered.map((squad) => {
+            const isMember = mySquadIds.has(squad.id);
+            return (
+              <Card key={squad.id} className="card-hover cursor-pointer" onClick={() => openChat(squad)}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center justify-between">
+                    {squad.name}
+                    {isMember && <Badge variant="default" className="text-[10px]">Joined</Badge>}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {squad.description && <p className="text-sm text-muted-foreground line-clamp-2">{squad.description}</p>}
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="text-xs">
+                      <Users className="h-3 w-3 mr-1" /> {squad.member_count} members
+                    </Badge>
+                    <Button size="sm" variant={isMember ? "default" : "outline"} onClick={(e) => { e.stopPropagation(); openChat(squad); }}>
+                      {isMember ? "Open Chat" : "Join & Chat"}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>
