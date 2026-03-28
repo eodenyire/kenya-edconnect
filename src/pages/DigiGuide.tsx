@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Briefcase, TrendingUp, GraduationCap, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Briefcase, TrendingUp, GraduationCap, Loader2, Target } from "lucide-react";
+import DreamSimulator from "@/components/DreamSimulator";
 
 const clusters = [
   "All Clusters", "Applied Sciences", "Business & Commerce", "Engineering & Technology",
@@ -44,7 +46,13 @@ export default function DigiGuide() {
         <p className="text-muted-foreground mt-1">Explore careers aligned with Kenya's KUCCPS clusters</p>
       </div>
 
-      {/* Filters */}
+      <Tabs defaultValue="explore" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="explore" className="gap-1.5"><Briefcase className="h-4 w-4" /> Explore Careers</TabsTrigger>
+          <TabsTrigger value="simulator" className="gap-1.5"><Target className="h-4 w-4" /> Dream Simulator</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="explore" className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -104,6 +112,12 @@ export default function DigiGuide() {
           ))}
         </div>
       )}
+        </TabsContent>
+
+        <TabsContent value="simulator">
+          <DreamSimulator careers={careers} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
