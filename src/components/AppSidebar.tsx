@@ -24,6 +24,7 @@ const mainItems = [
   { title: "DigiLab", url: "/digilab", icon: BookOpen },
   { title: "DigiChat", url: "/digichat", icon: MessageSquare },
   { title: "DigiBlog", url: "/digiblog", icon: Newspaper },
+  { title: "Grades", url: "/academic-tracker", icon: GraduationCap },
 ];
 
 const bottomItems = [
