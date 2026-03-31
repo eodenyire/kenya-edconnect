@@ -46,6 +46,8 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/academic-tracker" element={<AcademicTracker />} />
+            </Route>
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>
