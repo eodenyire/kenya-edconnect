@@ -1,9 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Target, TrendingUp, AlertTriangle, CheckCircle2, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Target, TrendingUp, AlertTriangle, CheckCircle2, ChevronRight, Download } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const KCSE_GRADES = ["A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E"] as const;
 type Grade = typeof KCSE_GRADES[number];
@@ -34,19 +39,72 @@ interface Props {
 }
 
 export default function DreamSimulator({ careers }: Props) {
+  const { user } = useAuth();
   const [selectedCareerId, setSelectedCareerId] = useState<string>("");
   const [myGrades, setMyGrades] = useState<Record<string, Grade>>({});
+
+  // Fetch latest academic records per subject
+  const { data: academicRecords = [] } = useQuery({
+    queryKey: ["academic_records_latest", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("academic_records")
+        .select("*")
+        .order("year", { ascending: false })
+        .order("term", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
+
+  // Build a map of subject → latest grade from academic records
+  const latestGradesBySubject = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const rec of academicRecords) {
+      // First entry per subject is the latest (sorted desc)
+      if (!map[rec.subject]) {
+        map[rec.subject] = rec.grade;
+      }
+    }
+    return map;
+  }, [academicRecords]);
 
   const selectedCareer = careers.find((c) => c.id === selectedCareerId);
   const requiredSubjects = selectedCareer?.required_subjects ?? [];
   const minGrade = (selectedCareer?.min_grade ?? "C") as Grade;
   const minPoints = gradePoints[minGrade] ?? 6;
 
-  // Determine which subjects to show grade inputs for
   const subjectsToRate = useMemo(() => {
     if (!requiredSubjects.length) return [];
     return ALL_SUBJECTS.filter((s) => requiredSubjects.includes(s));
   }, [requiredSubjects]);
+
+  // Auto-fill grades from academic records when career changes
+  const handleCareerChange = (careerId: string) => {
+    setSelectedCareerId(careerId);
+    setMyGrades({});
+  };
+
+  const autoFillGrades = () => {
+    const filled: Record<string, Grade> = {};
+    let count = 0;
+    for (const subject of subjectsToRate) {
+      const grade = latestGradesBySubject[subject];
+      if (grade && grade in gradePoints) {
+        filled[subject] = grade as Grade;
+        count++;
+      }
+    }
+    setMyGrades((prev) => ({ ...prev, ...filled }));
+    if (count > 0) {
+      toast.success(`Auto-filled ${count} subject${count > 1 ? "s" : ""} from your Academic Tracker`);
+    } else {
+      toast.info("No matching grades found in your Academic Tracker. Add grades there first!");
+    }
+  };
+
+  const hasRecordsForSubjects = subjectsToRate.some((s) => s in latestGradesBySubject);
 
   const gaps = useMemo(() => {
     if (!selectedCareer) return [];
@@ -84,7 +142,7 @@ export default function DreamSimulator({ careers }: Props) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Select value={selectedCareerId} onValueChange={(v) => { setSelectedCareerId(v); setMyGrades({}); }}>
+          <Select value={selectedCareerId} onValueChange={handleCareerChange}>
             <SelectTrigger className="w-full sm:w-[360px]">
               <SelectValue placeholder="Select a career..." />
             </SelectTrigger>
@@ -138,10 +196,20 @@ export default function DreamSimulator({ careers }: Props) {
           {subjectsToRate.length > 0 ? (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Your Grades vs Requirements</CardTitle>
-                <CardDescription>
-                  Enter your current (or projected) grade for each required subject.
-                </CardDescription>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <CardTitle className="text-lg">Your Grades vs Requirements</CardTitle>
+                    <CardDescription>
+                      Enter your current (or projected) grade for each required subject.
+                    </CardDescription>
+                  </div>
+                  {hasRecordsForSubjects && (
+                    <Button variant="outline" size="sm" onClick={autoFillGrades} className="gap-1.5 shrink-0">
+                      <Download className="h-4 w-4" />
+                      Auto-fill from Tracker
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Overall readiness */}
