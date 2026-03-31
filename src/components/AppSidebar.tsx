@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -24,6 +24,7 @@ const mainItems = [
   { title: "DigiLab", url: "/digilab", icon: BookOpen },
   { title: "DigiChat", url: "/digichat", icon: MessageSquare },
   { title: "DigiBlog", url: "/digiblog", icon: Newspaper },
+  { title: "Grades", url: "/academic-tracker", icon: GraduationCap },
 ];
 
 const bottomItems = [

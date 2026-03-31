@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_records: {
+        Row: {
+          created_at: string
+          grade: string
+          id: string
+          points: number
+          subject: string
+          term: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          grade: string
+          id?: string
+          points?: number
+          subject: string
+          term: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          grade?: string
+          id?: string
+          points?: number
+          subject?: string
+          term?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
       blog_comments: {
         Row: {
           author_id: string

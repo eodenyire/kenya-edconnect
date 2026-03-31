@@ -16,6 +16,7 @@ import DigiChat from "./pages/DigiChat";
 import DigiBlog from "./pages/DigiBlog";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import AcademicTracker from "./pages/AcademicTracker";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
 
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/digiblog" element={<DigiBlog />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/academic-tracker" element={<AcademicTracker />} />
             </Route>
           </Route>
 
