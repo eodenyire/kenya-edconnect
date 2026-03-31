@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
