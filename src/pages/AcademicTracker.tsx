@@ -12,7 +12,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import { toast } from "sonner";
-import { Plus, Trash2, TrendingUp, BookOpen, BarChart3 } from "lucide-react";
+import { Plus, Trash2, TrendingUp, BookOpen, BarChart3, Download, FileText } from "lucide-react";
+import { exportToCSV, exportToPDF } from "@/lib/exportAcademicRecords";
 
 const GRADES = ["A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E"] as const;
 const TERMS = ["Term 1", "Term 2", "Term 3"] as const;
@@ -145,12 +146,24 @@ export default function AcademicTracker() {
 
   return (
     <div className="space-y-6 max-w-6xl">
-      <div>
-        <h1 className="text-3xl font-display font-bold flex items-center gap-2">
-          <BookOpen className="h-8 w-8 text-primary" />
-          Academic Tracker
-        </h1>
-        <p className="text-muted-foreground mt-1">Record your grades and track performance trends</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-display font-bold flex items-center gap-2">
+            <BookOpen className="h-8 w-8 text-primary" />
+            Academic Tracker
+          </h1>
+          <p className="text-muted-foreground mt-1">Record your grades and track performance trends</p>
+        </div>
+        {records.length > 0 && (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => exportToCSV(records)} className="gap-1.5">
+              <Download className="h-4 w-4" /> CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => exportToPDF(records)} className="gap-1.5">
+              <FileText className="h-4 w-4" /> PDF
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Stats summary */}
