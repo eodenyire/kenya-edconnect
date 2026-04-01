@@ -352,6 +352,45 @@ export type Database = {
         }
         Relationships: []
       }
+      simulation_results: {
+        Row: {
+          career_id: string
+          career_title: string
+          created_at: string
+          gaps: Json
+          grades: Json
+          id: string
+          met_count: number
+          readiness_percent: number
+          total_required: number
+          user_id: string
+        }
+        Insert: {
+          career_id: string
+          career_title: string
+          created_at?: string
+          gaps?: Json
+          grades?: Json
+          id?: string
+          met_count?: number
+          readiness_percent?: number
+          total_required?: number
+          user_id: string
+        }
+        Update: {
+          career_id?: string
+          career_title?: string
+          created_at?: string
+          gaps?: Json
+          grades?: Json
+          id?: string
+          met_count?: number
+          readiness_percent?: number
+          total_required?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       squad_memberships: {
         Row: {
           id: string
