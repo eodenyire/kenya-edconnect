@@ -12,7 +12,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import { toast } from "sonner";
-import { Plus, Trash2, TrendingUp, BookOpen, BarChart3 } from "lucide-react";
+import { Plus, Trash2, TrendingUp, BookOpen, BarChart3, Download, FileText } from "lucide-react";
+import { exportToCSV, exportToPDF } from "@/lib/exportAcademicRecords";
 
 const GRADES = ["A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E"] as const;
 const TERMS = ["Term 1", "Term 2", "Term 3"] as const;
