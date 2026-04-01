@@ -226,7 +226,7 @@ export default function DreamSimulator({ careers }: Props) {
 
       {showHistory ? (
         /* Saved simulations list */
-        <div className="space-y-3">
+        <div className="space-y-6">
           {savedSimulations.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
@@ -236,40 +236,49 @@ export default function DreamSimulator({ careers }: Props) {
               </CardContent>
             </Card>
           ) : (
-            savedSimulations.map((sim) => (
-              <Card key={sim.id} className="card-hover">
-                <CardContent className="flex items-center gap-4 py-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{sim.career_title}</p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <Badge
-                        variant={sim.readiness_percent === 100 ? "default" : "secondary"}
-                        className={sim.readiness_percent === 100 ? "bg-green-600" : ""}
-                      >
-                        {sim.readiness_percent}% ready
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {sim.met_count}/{sim.total_required} subjects met
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {format(new Date(sim.created_at), "MMM d, yyyy")}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-1.5 shrink-0">
-                    <Button variant="outline" size="sm" onClick={() => loadSimulation(sim)}>Load</Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => deleteMutation.mutate(sim.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+            <>
+              {/* Readiness Trend Chart */}
+              <ReadinessTrendChart simulations={savedSimulations} />
+
+              {/* Simulation cards */}
+              <div className="space-y-3">
+                {savedSimulations.map((sim) => (
+                  <Card key={sim.id} className="card-hover">
+                    <CardContent className="flex items-center gap-4 py-4">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{sim.career_title}</p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <Badge
+                            variant={sim.readiness_percent === 100 ? "default" : "secondary"}
+                            className={sim.readiness_percent === 100 ? "bg-green-600" : ""}
+                          >
+                            {sim.readiness_percent}% ready
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {sim.met_count}/{sim.total_required} subjects met
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {format(new Date(sim.created_at), "MMM d, yyyy")}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-1.5 shrink-0">
+                        <Button variant="outline" size="sm" onClick={() => loadSimulation(sim)}>Load</Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteMutation.mutate(sim.id)}
+                          disabled={deleteMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
+          )}
           )}
         </div>
       ) : (
