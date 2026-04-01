@@ -279,7 +279,6 @@ export default function DreamSimulator({ careers }: Props) {
               </div>
             </>
           )}
-          )}
         </div>
       ) : (
         <>
