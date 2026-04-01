@@ -86,10 +86,16 @@ export default function DreamSimulator({ careers }: Props) {
       readiness_percent: number;
       gaps: unknown[];
     }) => {
-      const { error } = await supabase.from("simulation_results").insert({
+      const { error } = await supabase.from("simulation_results").insert([{
         user_id: user!.id,
-        ...payload,
-      });
+        career_id: payload.career_id,
+        career_title: payload.career_title,
+        grades: payload.grades as unknown as Record<string, unknown>,
+        met_count: payload.met_count,
+        total_required: payload.total_required,
+        readiness_percent: payload.readiness_percent,
+        gaps: payload.gaps as unknown as Record<string, unknown>[],
+      }]);
       if (error) throw error;
     },
     onSuccess: () => {
