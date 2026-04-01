@@ -146,12 +146,24 @@ export default function AcademicTracker() {
 
   return (
     <div className="space-y-6 max-w-6xl">
-      <div>
-        <h1 className="text-3xl font-display font-bold flex items-center gap-2">
-          <BookOpen className="h-8 w-8 text-primary" />
-          Academic Tracker
-        </h1>
-        <p className="text-muted-foreground mt-1">Record your grades and track performance trends</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-display font-bold flex items-center gap-2">
+            <BookOpen className="h-8 w-8 text-primary" />
+            Academic Tracker
+          </h1>
+          <p className="text-muted-foreground mt-1">Record your grades and track performance trends</p>
+        </div>
+        {records.length > 0 && (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => exportToCSV(records)} className="gap-1.5">
+              <Download className="h-4 w-4" /> CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => exportToPDF(records)} className="gap-1.5">
+              <FileText className="h-4 w-4" /> PDF
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Stats summary */}
