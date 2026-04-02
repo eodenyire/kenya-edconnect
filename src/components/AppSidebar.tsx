@@ -40,10 +40,17 @@ export function AppSidebar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [flaggedCount, setFlaggedCount] = useState(0);
 
   useEffect(() => {
     if (!user) return;
-    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => setIsAdmin(!!data));
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => {
+      setIsAdmin(!!data);
+      if (data) {
+        supabase.from("messages").select("id", { count: "exact", head: true }).eq("is_flagged", true)
+          .then(({ count }) => setFlaggedCount(count || 0));
+      }
+    });
   }, [user]);
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
