@@ -39,6 +39,12 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
   const initials = user?.email?.charAt(0).toUpperCase() ?? "U";
