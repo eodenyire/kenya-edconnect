@@ -85,9 +85,14 @@ export function AppSidebar() {
               {isAdmin && (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={isActive("/moderation")}>
-                    <NavLink to="/moderation" className="hover:bg-muted/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                    <NavLink to="/moderation" className="hover:bg-muted/50 relative" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
                       <ShieldAlert className="h-4 w-4" />
                       {!collapsed && <span>Moderation</span>}
+                      {flaggedCount > 0 && (
+                        <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1">
+                          {flaggedCount > 99 ? "99+" : flaggedCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
