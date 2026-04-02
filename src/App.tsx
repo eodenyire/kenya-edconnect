@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import AcademicTracker from "./pages/AcademicTracker";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ModerationPanel from "./components/ModerationPanel";
 import AppLayout from "./components/AppLayout";
 
 const queryClient = new QueryClient();
