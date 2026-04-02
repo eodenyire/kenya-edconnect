@@ -42,16 +42,33 @@ export function AppSidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [flaggedCount, setFlaggedCount] = useState(0);
 
+  const fetchFlaggedCount = async () => {
+    const { count } = await supabase.from("messages").select("id", { count: "exact", head: true }).eq("is_flagged", true);
+    setFlaggedCount(count || 0);
+  };
+
   useEffect(() => {
     if (!user) return;
     supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => {
       setIsAdmin(!!data);
-      if (data) {
-        supabase.from("messages").select("id", { count: "exact", head: true }).eq("is_flagged", true)
-          .then(({ count }) => setFlaggedCount(count || 0));
-      }
+      if (data) fetchFlaggedCount();
     });
   }, [user]);
+
+  // Realtime subscription for flagged message count
+  useEffect(() => {
+    if (!isAdmin) return;
+    const channel = supabase
+      .channel("flagged-messages-count")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "messages" }, () => {
+        fetchFlaggedCount();
+      })
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "messages" }, () => {
+        fetchFlaggedCount();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [isAdmin]);
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
   const initials = user?.email?.charAt(0).toUpperCase() ?? "U";
