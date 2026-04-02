@@ -47,6 +47,7 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/academic-tracker" element={<AcademicTracker />} />
+              <Route path="/moderation" element={<ModerationPanel />} />
             </Route>
           </Route>
 
