@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap, ShieldAlert } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -37,6 +39,12 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
   const initials = user?.email?.charAt(0).toUpperCase() ?? "U";
@@ -67,6 +75,16 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/moderation")}>
+                    <NavLink to="/moderation" className="hover:bg-muted/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <ShieldAlert className="h-4 w-4" />
+                      {!collapsed && <span>Moderation</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

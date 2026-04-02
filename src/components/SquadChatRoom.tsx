@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Flag, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 
 interface SquadChatRoomProps {
@@ -19,6 +20,7 @@ interface Message {
   sender_id: string;
   created_at: string;
   sender_name?: string;
+  is_flagged?: boolean;
 }
 
 export default function SquadChatRoom({ squad, onBack }: SquadChatRoomProps) {
@@ -125,6 +127,19 @@ export default function SquadChatRoom({ squad, onBack }: SquadChatRoomProps) {
     setSending(false);
   };
 
+  const flagMessage = async (msgId: string) => {
+    const { error } = await supabase
+      .from("messages")
+      .update({ is_flagged: true })
+      .eq("id", msgId);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setMessages((prev) => prev.map((m) => m.id === msgId ? { ...m, is_flagged: true } : m));
+      toast({ title: "Reported", description: "Message has been flagged for review." });
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -226,14 +241,46 @@ export default function SquadChatRoom({ squad, onBack }: SquadChatRoomProps) {
                           {senderName}
                         </p>
                       )}
-                      <div
-                        className={`rounded-2xl px-3 py-2 text-sm ${
-                          isOwn
-                            ? "bg-primary text-primary-foreground rounded-br-md"
-                            : "bg-muted rounded-bl-md"
-                        }`}
-                      >
-                        {msg.content}
+                      <div className="group relative">
+                        <div
+                          className={`rounded-2xl px-3 py-2 text-sm ${
+                            msg.is_flagged
+                              ? "bg-destructive/10 border border-destructive/30 text-muted-foreground italic"
+                              : isOwn
+                                ? "bg-primary text-primary-foreground rounded-br-md"
+                                : "bg-muted rounded-bl-md"
+                          }`}
+                        >
+                          {msg.is_flagged ? (
+                            <span className="flex items-center gap-1">
+                              <Flag className="h-3 w-3 text-destructive" />
+                              This message has been flagged
+                            </span>
+                          ) : (
+                            msg.content
+                          )}
+                        </div>
+                        {!isOwn && !msg.is_flagged && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute -right-8 top-0 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <MoreVertical className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => flagMessage(msg.id)}
+                              >
+                                <Flag className="h-3 w-3 mr-2" /> Report Message
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
                       <p
                         className={`text-[10px] text-muted-foreground mt-0.5 ${isOwn ? "text-right mr-1" : "ml-1"}`}
