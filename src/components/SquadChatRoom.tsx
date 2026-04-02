@@ -127,6 +127,19 @@ export default function SquadChatRoom({ squad, onBack }: SquadChatRoomProps) {
     setSending(false);
   };
 
+  const flagMessage = async (msgId: string) => {
+    const { error } = await supabase
+      .from("messages")
+      .update({ is_flagged: true })
+      .eq("id", msgId);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setMessages((prev) => prev.map((m) => m.id === msgId ? { ...m, is_flagged: true } : m));
+      toast({ title: "Reported", description: "Message has been flagged for review." });
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
