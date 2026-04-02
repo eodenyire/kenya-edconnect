@@ -20,6 +20,7 @@ interface Message {
   sender_id: string;
   created_at: string;
   sender_name?: string;
+  is_flagged?: boolean;
 }
 
 export default function SquadChatRoom({ squad, onBack }: SquadChatRoomProps) {
