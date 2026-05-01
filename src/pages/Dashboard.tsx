@@ -73,6 +73,9 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Upcoming study blocks */}
+      <UpcomingStudyBlocks />
+
       {/* Recent activity placeholder */}
       <Card>
         <CardHeader>
