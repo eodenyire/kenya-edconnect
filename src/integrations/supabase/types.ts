@@ -313,8 +313,11 @@ export type Database = {
           education_level: Database["public"]["Enums"]["education_level"] | null
           grade: string | null
           id: string
+          interests: string[] | null
+          onboarding_completed: boolean
           phone: string | null
           school: string | null
+          subjects: string[] | null
           updated_at: string
           user_id: string
         }
@@ -329,8 +332,11 @@ export type Database = {
             | null
           grade?: string | null
           id?: string
+          interests?: string[] | null
+          onboarding_completed?: boolean
           phone?: string | null
           school?: string | null
+          subjects?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -345,8 +351,11 @@ export type Database = {
             | null
           grade?: string | null
           id?: string
+          interests?: string[] | null
+          onboarding_completed?: boolean
           phone?: string | null
           school?: string | null
+          subjects?: string[] | null
           updated_at?: string
           user_id?: string
         }
