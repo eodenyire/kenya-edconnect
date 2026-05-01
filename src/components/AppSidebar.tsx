@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap, ShieldAlert } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap, ShieldAlert, CalendarClock } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,7 @@ const mainItems = [
   { title: "DigiChat", url: "/digichat", icon: MessageSquare },
   { title: "DigiBlog", url: "/digiblog", icon: Newspaper },
   { title: "Grades", url: "/academic-tracker", icon: GraduationCap },
+  { title: "Study Planner", url: "/study-planner", icon: CalendarClock },
 ];
 
 const bottomItems = [
