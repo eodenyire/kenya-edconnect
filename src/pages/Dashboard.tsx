@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Compass, BookOpen, MessageSquare, Newspaper, TrendingUp, Users, Award, Target } from "lucide-react";
+import UpcomingStudyBlocks from "@/components/UpcomingStudyBlocks";
 
 const stats = [
   { label: "Career Matches", value: "12", icon: Target, color: "text-primary" },
