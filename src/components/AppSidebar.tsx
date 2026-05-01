@@ -27,6 +27,7 @@ const mainItems = [
   { title: "DigiChat", url: "/digichat", icon: MessageSquare },
   { title: "DigiBlog", url: "/digiblog", icon: Newspaper },
   { title: "Grades", url: "/academic-tracker", icon: GraduationCap },
+  { title: "Study Planner", url: "/study-planner", icon: CalendarClock },
 ];
 
 const bottomItems = [
