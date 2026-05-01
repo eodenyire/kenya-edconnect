@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import AcademicTracker from "./pages/AcademicTracker";
 import StudyPlannerPage from "./pages/StudyPlannerPage";
+import Onboarding from "./pages/Onboarding";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ModerationPanel from "./components/ModerationPanel";
 import AppLayout from "./components/AppLayout";
@@ -39,6 +40,7 @@ const App = () => (
 
           {/* Protected app routes */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/onboarding" element={<Onboarding />} />
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/digiguide" element={<DigiGuide />} />
