@@ -33,8 +33,10 @@ export default function Register() {
     if (error) {
       toast({ title: "Registration failed", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Account created!", description: "Check your email to verify your account." });
-      navigate("/login");
+      toast({ title: "Account created!", description: "Let's set up your profile." });
+      // With auto-confirm enabled, the user is signed in. Send them to onboarding.
+      const { data: { session } } = await supabase.auth.getSession();
+      navigate(session ? "/onboarding" : "/login");
     }
   };
 
