@@ -2,8 +2,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, TrendingUp, Users, Award, Target } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, TrendingUp, Users, Award, Target, Sparkles } from "lucide-react";
 import UpcomingStudyBlocks from "@/components/UpcomingStudyBlocks";
+import CareerRecommendations from "@/components/CareerRecommendations";
 
 const stats = [
   { label: "Career Matches", value: "12", icon: Target, color: "text-primary" },
@@ -73,8 +74,17 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Personalized career matches */}
+      <div>
+        <h2 className="text-xl font-display font-semibold mb-4 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-accent" /> Career Matches For You
+        </h2>
+        <CareerRecommendations limit={4} compact />
+      </div>
+
       {/* Upcoming study blocks */}
       <UpcomingStudyBlocks />
+
 
       {/* Recent activity placeholder */}
       <Card>
