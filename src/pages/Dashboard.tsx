@@ -74,8 +74,17 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Personalized career matches */}
+      <div>
+        <h2 className="text-xl font-display font-semibold mb-4 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-accent" /> Career Matches For You
+        </h2>
+        <CareerRecommendations limit={4} compact />
+      </div>
+
       {/* Upcoming study blocks */}
       <UpcomingStudyBlocks />
+
 
       {/* Recent activity placeholder */}
       <Card>
