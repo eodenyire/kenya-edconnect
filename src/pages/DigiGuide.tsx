@@ -47,11 +47,16 @@ export default function DigiGuide() {
         <p className="text-muted-foreground mt-1">Explore careers aligned with Kenya's KUCCPS clusters</p>
       </div>
 
-      <Tabs defaultValue="explore" className="space-y-6">
+      <Tabs defaultValue="foryou" className="space-y-6">
         <TabsList>
+          <TabsTrigger value="foryou" className="gap-1.5"><Sparkles className="h-4 w-4" /> For You</TabsTrigger>
           <TabsTrigger value="explore" className="gap-1.5"><Briefcase className="h-4 w-4" /> Explore Careers</TabsTrigger>
           <TabsTrigger value="simulator" className="gap-1.5"><Target className="h-4 w-4" /> Dream Simulator</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="foryou">
+          <CareerRecommendations careers={careers} limit={9} />
+        </TabsContent>
 
         <TabsContent value="explore" className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-3">
