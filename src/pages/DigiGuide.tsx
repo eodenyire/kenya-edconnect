@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Briefcase, TrendingUp, GraduationCap, Loader2, Target } from "lucide-react";
+import { Search, Briefcase, TrendingUp, GraduationCap, Loader2, Target, Sparkles } from "lucide-react";
 import DreamSimulator from "@/components/DreamSimulator";
+import CareerRecommendations from "@/components/CareerRecommendations";
 
 const clusters = [
   "All Clusters", "Applied Sciences", "Business & Commerce", "Engineering & Technology",
