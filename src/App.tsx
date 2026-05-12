@@ -19,6 +19,7 @@ import Settings from "./pages/Settings";
 import AcademicTracker from "./pages/AcademicTracker";
 import StudyPlannerPage from "./pages/StudyPlannerPage";
 import Onboarding from "./pages/Onboarding";
+import SchoolsAdmin from "./pages/SchoolsAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ModerationPanel from "./components/ModerationPanel";
 import AppLayout from "./components/AppLayout";
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/academic-tracker" element={<AcademicTracker />} />
               <Route path="/study-planner" element={<StudyPlannerPage />} />
               <Route path="/moderation" element={<ModerationPanel />} />
+              <Route path="/admin/schools" element={<SchoolsAdmin />} />
             </Route>
           </Route>
 

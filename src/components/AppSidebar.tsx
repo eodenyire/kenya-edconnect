@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap, ShieldAlert, CalendarClock } from "lucide-react";
+import { Compass, BookOpen, MessageSquare, Newspaper, LayoutDashboard, User, Settings, LogOut, GraduationCap, ShieldAlert, CalendarClock, Building2 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -111,6 +111,16 @@ export function AppSidebar() {
                           {flaggedCount > 99 ? "99+" : flaggedCount}
                         </span>
                       )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/admin/schools")}>
+                    <NavLink to="/admin/schools" className="hover:bg-muted/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <Building2 className="h-4 w-4" />
+                      {!collapsed && <span>Schools</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

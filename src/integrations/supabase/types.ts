@@ -317,6 +317,7 @@ export type Database = {
           onboarding_completed: boolean
           phone: string | null
           school: string | null
+          school_id: string | null
           subjects: string[] | null
           updated_at: string
           user_id: string
@@ -336,6 +337,7 @@ export type Database = {
           onboarding_completed?: boolean
           phone?: string | null
           school?: string | null
+          school_id?: string | null
           subjects?: string[] | null
           updated_at?: string
           user_id: string
@@ -355,9 +357,146 @@ export type Database = {
           onboarding_completed?: boolean
           phone?: string | null
           school?: string | null
+          school_id?: string | null
           subjects?: string[] | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      school_erp_connections: {
+        Row: {
+          api_key_hash: string | null
+          api_key_last4: string | null
+          base_url: string | null
+          config: Json
+          created_at: string
+          created_by: string | null
+          display_name: string
+          id: string
+          last_error: string | null
+          last_sync_at: string | null
+          provider: Database["public"]["Enums"]["erp_provider"]
+          school_id: string
+          status: Database["public"]["Enums"]["erp_status"]
+          sync_grades: boolean
+          sync_interval_minutes: number
+          sync_students: boolean
+          updated_at: string
+        }
+        Insert: {
+          api_key_hash?: string | null
+          api_key_last4?: string | null
+          base_url?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          display_name: string
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          provider?: Database["public"]["Enums"]["erp_provider"]
+          school_id: string
+          status?: Database["public"]["Enums"]["erp_status"]
+          sync_grades?: boolean
+          sync_interval_minutes?: number
+          sync_students?: boolean
+          updated_at?: string
+        }
+        Update: {
+          api_key_hash?: string | null
+          api_key_last4?: string | null
+          base_url?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          display_name?: string
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          provider?: Database["public"]["Enums"]["erp_provider"]
+          school_id?: string
+          status?: Database["public"]["Enums"]["erp_status"]
+          sync_grades?: boolean
+          sync_interval_minutes?: number
+          sync_students?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_erp_connections_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          county: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          motto: string | null
+          name: string
+          phone: string | null
+          physical_address: string | null
+          postal_address: string | null
+          principal_name: string | null
+          registration_number: string | null
+          slug: string | null
+          sub_county: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          county?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          motto?: string | null
+          name: string
+          phone?: string | null
+          physical_address?: string | null
+          postal_address?: string | null
+          principal_name?: string | null
+          registration_number?: string | null
+          slug?: string | null
+          sub_county?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          county?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          motto?: string | null
+          name?: string
+          phone?: string | null
+          physical_address?: string | null
+          postal_address?: string | null
+          principal_name?: string | null
+          registration_number?: string | null
+          slug?: string | null
+          sub_county?: string | null
+          updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -581,6 +720,8 @@ export type Database = {
         | "junior_secondary"
         | "senior_secondary"
         | "university"
+      erp_provider: "nemis" | "generic_rest" | "custom"
+      erp_status: "active" | "inactive" | "error"
       resource_type: "text" | "video" | "audio" | "pdf" | "assessment"
     }
     CompositeTypes: {
@@ -726,6 +867,8 @@ export const Constants = {
         "senior_secondary",
         "university",
       ],
+      erp_provider: ["nemis", "generic_rest", "custom"],
+      erp_status: ["active", "inactive", "error"],
       resource_type: ["text", "video", "audio", "pdf", "assessment"],
     },
   },
