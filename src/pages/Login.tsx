@@ -28,6 +28,14 @@ export default function Login() {
   };
 
   const handleSocialLogin = async (provider: "google" | "apple") => {
+    const isPreview = window.location.hostname.includes("lovable.app") && window.location.hostname.includes("preview");
+    if (isPreview) {
+      toast({
+        title: "Social login unavailable in preview",
+        description: "Google and Apple sign-in only work on your published site. Use email & password here.",
+      });
+      return;
+    }
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin + "/dashboard",
