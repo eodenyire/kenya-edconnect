@@ -53,6 +53,7 @@ const App = () => (
               <Route path="/academic-tracker" element={<AcademicTracker />} />
               <Route path="/study-planner" element={<StudyPlannerPage />} />
               <Route path="/moderation" element={<ModerationPanel />} />
+              <Route path="/admin/schools" element={<SchoolsAdmin />} />
             </Route>
           </Route>
 
